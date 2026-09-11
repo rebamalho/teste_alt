@@ -1,0 +1,525 @@
+{% extends "base.html" %}
+
+{% block title %}
+Painel de Alterações Orçamentárias
+{% endblock %}
+
+{% block header_toggle %}
+<div class="visao-toggle header-visao-toggle" id="visaoToggle">
+    <button type="button" class="visao-btn" data-visao="dashboard">Dashboard</button>
+    <button type="button" class="visao-btn" data-visao="dados">Dados</button>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="alteracoes-page">
+
+    <!-- ===================================== -->
+    <!-- CABEÇALHO -->
+    <!-- ===================================== -->
+
+    <div class="page-header">
+
+        <div class="page-header-info">
+
+            <h2>
+                Painel de Alterações Orçamentárias
+            </h2>
+
+            <p>
+                Monitoramento das suplementações, cancelamentos e alterações
+                registradas na base orçamentária.
+            </p>
+
+            {% if data_geracao %}
+            <p class="data-atualizacao">
+                Última atualização: {{ data_geracao }}
+            </p>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- ===================================== -->
+    <!-- FONTE (Efetivadas / Não Efetivadas) — visão Dados -->
+    <!-- ===================================== -->
+
+    {% if visao != "dashboard" %}
+    <div class="fonte-toggle-row">
+        <div class="visao-toggle" id="fonteToggle">
+            <button type="button" class="visao-btn" data-visao="efetivadas">Efetivadas</button>
+            <button type="button" class="visao-btn" data-visao="nao_efetivadas">Não Efetivadas</button>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ===================================== -->
+    <!-- FILTROS -->
+    <!-- ===================================== -->
+
+    <div class="filter-panel" id="filterPanel">
+
+        <div class="filter-panel-header" id="filterPanelHeader">
+
+            <span class="filter-panel-title">Filtros</span>
+
+            <button
+                type="button"
+                class="filter-panel-toggle"
+                id="filterPanelToggle"
+                title="Expandir ou recolher a área de filtros"
+                aria-expanded="true"
+                aria-controls="formFiltros">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+
+        </div>
+
+        <form id="formFiltros" class="filter-panel-body">
+
+            <div class="filters-grid">
+
+                <div class="filter-group filter-type-pill cell-classificacao">
+                    <label>Classificação</label>
+                    <div class="pill-row" id="pillsClassificacao"></div>
+                    <div class="ms-wrap">
+                        <select id="classificacao" multiple style="display:none">
+                            {% for item in filtros.classificacoes %}
+                            <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group filter-type-pill">
+                    <label>Exercício</label>
+                    <div class="pill-row" id="pillsExercicio"></div>
+                    <div class="ms-wrap">
+                        <select id="exercicio" multiple style="display:none">
+                            {% for item in filtros.exercicios %}
+                            <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group filter-type-pill">
+                    <label>RP</label>
+                    <div class="pill-row" id="pillsRps"></div>
+                    <div class="ms-wrap">
+                        <select id="rps" multiple style="display:none">
+                            {% for item in filtros.rps %}
+                            <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group ms-wrap">
+                    <label>Tipo Alteração</label>
+                    <select id="tipo_alteracao" multiple>
+                        {% for item in filtros.tipos_alteracao %}
+                        <option value="{{ item }}">{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="filter-group filter-type-pill">
+                    <label>IDUSO</label>
+                    <div class="pill-row" id="pillsIduso"></div>
+                    <div class="ms-wrap">
+                        <select id="iduso" multiple style="display:none">
+                            {% for item in filtros.idusos %}
+                            <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group filter-type-pill">
+                    <label>GND</label>
+                    <div class="pill-row" id="pillsGnd"></div>
+                    <div class="ms-wrap">
+                        <select id="gnd" multiple style="display:none">
+                            {% for item in filtros.gnds %}
+                            <option value="{{ item }}">{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group ms-wrap">
+                    <label>Subtipo do Ato</label>
+                    <select id="financiamento" multiple>
+                        {% for item in filtros.financiamentos %}
+                        <option value="{{ item }}">{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+            </div>
+
+            <!-- ===================================== -->
+            <!-- ÓRGÃOS -->
+            <!-- ===================================== -->
+
+            <div class="orgaos-row">
+
+                <div class="filter-group filter-type-pill">
+
+                    <div class="filter-head">
+                        <label>ORGAO</label>
+                        <div class="filter-head-actions">
+                            <button
+                                type="button"
+                                class="filter-action-btn"
+                                id="orgaoSelecionarTodosBtn"
+                                title="Selecionar todos os órgãos"
+                                onclick="selecionarTodosOrgaos()">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                                    <path d="m8.5 12.5 2.6 2.6 4.4-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <button
+                                type="button"
+                                class="filter-action-btn filter-action-btn-danger"
+                                id="orgaoLimparBtn"
+                                title="Limpar órgãos selecionados"
+                                onclick="limparOrgaos()">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M22 21H7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="m5 11 9 9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="pill-row" id="pillsOrgao"></div>
+                    <div class="ms-wrap">
+                        <select id="orgao" multiple style="display:none">
+                            {% for orgao in filtros.orgaos %}
+                            <option value="{{ orgao }}">{{ orgao }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ===================================== -->
+            <!-- BUSCA GLOBAL (Pedido, Ação, UO, Local.) -->
+            <!-- ===================================== -->
+
+            <div class="gs-wrap" id="gsWrap">
+
+                <div class="gs-chips" id="gsChips"></div>
+
+                <div class="gs-legend" id="gsLegend"></div>
+
+                <input
+                    type="text"
+                    class="gs-input"
+                    id="gsInput"
+                    placeholder="Buscar Pedido, Ação, UO ou Localizador..."
+                    autocomplete="off"
+                >
+
+                <div class="gs-dropdown" id="gsDropdown"></div>
+
+            </div>
+
+            <!-- selects ocultos para o backend (opções carregadas via API) -->
+            <select id="pedido" multiple style="display:none"></select>
+            <select id="acao" multiple style="display:none"></select>
+            <select id="uo" multiple style="display:none"></select>
+            <select id="localizador" multiple style="display:none"></select>
+
+            <div class="filters-actions">
+
+                <select id="unidade" title="Unidade dos valores">
+                    <option value="bi" selected>Bilhão</option>
+                    <option value="mi">Milhão</option>
+                    <option value="mil">Mil</option>
+                    <option value="raw">R$ 1,00</option>
+                </select>
+
+                <button
+                    type="button"
+                    class="btn-limpar"
+                    onclick="limparFiltros()">
+
+                    Limpar Filtros
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div><!-- /filter-panel -->
+
+    <!-- ===================================== -->
+    <!-- TABELA (somente na visão Dados) -->
+    <!-- ===================================== -->
+
+    {% if visao != "dashboard" %}
+    <div class="table-section">
+
+        <div class="table-toolbar" id="tableToolbar">
+
+            <div class="toolbar-group">
+                <h3>
+                    Detalhamento das Alterações
+                </h3>
+            </div>
+
+            <div class="toolbar-group">
+                <div class="construtor-picker" id="construtorPicker">
+                    <button type="button" class="btn-ghost btn-icon-label" id="construtorBtn" title="Adicionar ou remover colunas da tabela">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="13" height="13">
+                            <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                        </svg>
+                        <span>Colunas</span>
+                    </button>
+                    <div class="construtor-panel" id="construtorPanel">
+                        <input type="text" class="ms-search" id="construtorSearch" placeholder="Buscar coluna...">
+                        <div class="construtor-options" id="construtorOptions"></div>
+                    </div>
+                </div>
+                <button class="btn-ghost btn-icon-label btn-limpar-construtor" id="construtorLimparFiltrosBtn" title="Limpar filtros de coluna da tabela" onclick="limparFiltrosConstrutor()" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="13" height="13">
+                        <path d="M3 5h18l-7 8v5l-4 2v-7L3 5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                        <path d="M5 3l14 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                    <span>Limpar Filtros</span>
+                </button>
+                <div class="font-size-controls">
+                    <button class="btn-ghost btn-font" id="fontDecBtn" title="Diminuir fonte da tabela" onclick="tabelaFonte(-1)">A−</button>
+                    <button class="btn-ghost btn-font" id="fontIncBtn" title="Aumentar fonte da tabela" onclick="tabelaFonte(1)">A+</button>
+                    <span class="ctrl-val" id="tabelaFonteVal">13</span>
+                </div>
+                <div class="font-size-controls">
+                    <button class="btn-ghost btn-font" id="spacingDecBtn" title="Diminuir espaçamento vertical" onclick="tabelaSpacing(-1)">↕−</button>
+                    <button class="btn-ghost btn-font" id="spacingIncBtn" title="Aumentar espaçamento vertical" onclick="tabelaSpacing(1)">↕+</button>
+                    <span class="ctrl-val" id="tabelaSpacingVal">10</span>
+                </div>
+                <button class="btn-ghost btn-icon-label" id="exportExcelBtn" title="Exportar para Excel" onclick="exportarExcel()">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="13" height="13">
+                        <path d="M12 3v12m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Excel</span>
+                </button>
+                <button class="btn-ghost btn-icon-label" id="exportImageBtn" title="Exportar tabela como imagem" onclick="exportarPrint()">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="13" height="13">
+                        <path d="M4 8a2 2 0 0 1 2-2h1.5l1-1.5h7l1 1.5H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                        <circle cx="12" cy="12.5" r="3.2" stroke="currentColor" stroke-width="1.7"/>
+                    </svg>
+                    <span>Imagem</span>
+                </button>
+            </div>
+
+        </div>
+
+        <div class="data-table-wrap" id="tabelaWrap">
+
+            <table
+                class="data-table"
+                id="tabelaAlteracoes">
+
+                <thead id="tabelaHead">
+
+                    <tr>
+
+                        <th>Detalhamento</th>
+
+                        <th>Suplementação</th>
+
+                        <th>Cancelamento</th>
+
+                        <th>Saldo</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="tabelaBody">
+
+                    {% for linha in tabela %}
+
+                    <tr>
+
+                        <td>
+                            {{ linha.meses }}
+                        </td>
+
+                        <td class="numeric">
+                            R$ {{ "{:,.0f}".format(linha.suplementacao).replace(",", ".") }}
+                        </td>
+
+                        <td class="numeric">
+                            R$ {{ "{:,.0f}".format(linha.cancelamento).replace(",", ".") }}
+                        </td>
+
+                        <td class="numeric">
+                            R$ {{ "{:,.0f}".format(linha.saldo).replace(",", ".") }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+    {% if visao == "dashboard" %}
+    <div class="jornal-section" id="jornalSection">
+
+        <div class="jornal-bottom">
+
+            <div class="jornal-left">
+
+                <div class="jornal-panel">
+                    <h3 class="jornal-panel-title">Órgão por Valor Alterado</h3>
+                    <div class="jornal-top5" id="jornalTop5Orgaos"></div>
+                </div>
+
+                <div class="jornal-panel">
+                    <h3 class="jornal-panel-title">Atividade Mensal</h3>
+                    <div class="jornal-heatmap" id="jornalHeatmap"></div>
+                </div>
+
+            </div>
+
+            <div class="jornal-right">
+                <div class="jornal-timeline" id="jornalTimeline"></div>
+            </div>
+
+        </div>
+
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+let visaoAtual = {{ visao|tojson }};
+
+// Navegação principal (header): Dashboard / Dados
+const visaoToggle = document.getElementById("visaoToggle");
+if (visaoToggle) {
+
+    visaoToggle.querySelectorAll(".visao-btn").forEach(btn => {
+
+        const isDados = btn.dataset.visao === "dados";
+        const ativo = isDados
+            ? visaoAtual !== "dashboard"
+            : visaoAtual === "dashboard";
+
+        btn.classList.toggle("active", ativo);
+
+        btn.addEventListener("click", () => {
+
+            if (isDados) {
+
+                if (visaoAtual !== "dashboard") return;
+
+            } else {
+
+                if (visaoAtual === "dashboard") return;
+
+            }
+
+            const params =
+                new URLSearchParams(window.location.search);
+
+            params.set("visao", isDados ? "efetivadas" : "dashboard");
+
+            const qs = params.toString();
+
+            window.location.href =
+                qs ? ("?" + qs) : window.location.pathname;
+
+        });
+
+    });
+
+}
+
+// Seletor de fonte (visão Dados): Efetivadas / Não Efetivadas
+const fonteToggle = document.getElementById("fonteToggle");
+if (fonteToggle) {
+
+    fonteToggle.querySelectorAll(".visao-btn").forEach(btn => {
+
+        btn.classList.toggle(
+            "active",
+            btn.dataset.visao === visaoAtual
+        );
+
+        btn.addEventListener("click", () => {
+
+            if (btn.dataset.visao === visaoAtual) return;
+
+            const params =
+                new URLSearchParams(window.location.search);
+
+            params.set("visao", btn.dataset.visao);
+
+            const qs = params.toString();
+
+            window.location.href =
+                qs ? ("?" + qs) : window.location.pathname;
+
+        });
+
+    });
+
+}
+
+let tabelaInicial = {{ tabela|tojson }};
+
+let detalhesIniciais = {{ detalhes|tojson }};
+
+let cardsIniciais = {{ cards|tojson }};
+
+let jornalInicial = {{ jornal|tojson }};
+
+let topOrgaosInicial = {{ top_orgaos|tojson }};
+
+let heatmapMesInicial = {{ heatmap_mes|tojson }};
+
+let unidadeAtual = "bi";
+
+let colunasConstrutorFixas = {{ colunas_construtor_padrao|tojson }};
+let colunasConstrutorDisponiveis = {{ colunas_construtor_disponiveis|tojson }};
+let tabelaConstrutorInicial = [];
+let construtorColunas = [...colunasConstrutorFixas];
+
+</script>
+
+<script src="{{ url_for('static', filename='js/filtros.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tabela.js') }}"></script>
+<script src="{{ url_for('static', filename='js/construtor.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jornal.js') }}"></script>
+
+{% endblock %}

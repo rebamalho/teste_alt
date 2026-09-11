@@ -1,0 +1,408 @@
+/* ==========================================================
+   WRAPPER
+========================================================== */
+
+.data-table-wrap {
+
+    background: var(--card-bg);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-lg);
+
+    overflow: auto;
+
+    max-height: 840px;
+}
+
+/* ==========================================================
+   TABELA
+========================================================== */
+
+.data-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    font-size: 13px;
+}
+
+/* ==========================================================
+   CABEÇALHO
+========================================================== */
+
+.data-table thead th {
+
+    position: sticky;
+
+    top: 0;
+
+    background: var(--bg-elevated);
+
+    color: var(--text-faint);
+
+    text-transform: uppercase;
+
+    font-size: 11px;
+
+    letter-spacing: .5px;
+
+    padding: 12px;
+
+    text-align: right;
+
+    border-bottom: 2px solid var(--border);
+
+    z-index: 1;
+}
+
+.data-table thead th:first-child {
+
+    text-align: left;
+}
+
+/* Cabeçalho unificado: colunas de valores (últimas 3) alinhadas à direita */
+#tabelaHead th:nth-last-child(-n+3) {
+
+    text-align: right;
+}
+
+/* Área das colunas configuráveis nas linhas da ÁRVORE/thead (span vazio) */
+.config-span {
+
+    background: transparent;
+
+}
+
+/* Linha-cabeçalho CONGELADA do nó expandido.
+   Fica logo abaixo do thead (que já é sticky em top:0) e acima dos registros,
+   permanecendo visível enquanto se rola pela faixa de registros do nó. */
+.frozen-construtor-header {
+
+    position: sticky;
+
+    z-index: 2;
+
+    background: var(--bg-elevated);
+
+    color: var(--text-faint);
+
+    text-transform: uppercase;
+
+    font-size: 11px;
+
+    letter-spacing: .5px;
+
+    border-bottom: 2px solid var(--border);
+
+}
+
+.frozen-construtor-header th {
+
+    text-align: right;
+
+    padding: 8px 12px;
+
+    white-space: nowrap;
+
+}
+
+.frozen-construtor-header th[data-ci] {
+
+    text-align: left;
+
+    cursor: grab;
+
+    user-select: none;
+
+}
+
+.frozen-construtor-header th[data-ci]:active {
+
+    cursor: grabbing;
+
+}
+
+.frozen-construtor-header th[data-ci]:hover {
+
+    color: var(--primary);
+
+}
+
+.frozen-construtor-header td.detalhe-label-cell {
+
+    padding-left: 52px;
+
+}
+
+/* ==========================================================
+   LINHAS
+========================================================== */
+
+.data-table td {
+
+    padding: 10px 12px;
+
+    border-bottom: 1px solid var(--border-soft);
+
+    color: var(--text);
+}
+
+.data-table tbody tr:hover {
+
+    background: rgba(255,255,255,0.03);
+}
+
+/* ==========================================================
+   NÚMEROS
+========================================================== */
+
+.numeric {
+
+    text-align: right;
+
+    font-family: var(--mono);
+}
+
+/* ==========================================================
+   TOTAIS
+========================================================== */
+
+.total-row {
+
+    font-weight: 700;
+
+    background: rgba(74,138,248,0.10);
+}
+
+.total-row td {
+
+    border-top: 2px solid var(--primary);
+}
+
+/* ==========================================================
+   SEM DADOS
+========================================================== */
+
+.empty-table {
+
+    padding: 40px;
+
+    text-align: center;
+
+    color: var(--text-faint);
+}
+
+/* ==========================================================
+   ROWS EXPANSÍVEIS / DETALHES
+
+.row-mes.expandivel {
+
+    cursor: pointer;
+}
+
+.row-mes.expandivel:hover {
+
+    background: rgba(255,255,255,0.03);
+}
+
+.toggle-icon {
+
+    display: inline-block;
+
+    width: 16px;
+
+    text-align: center;
+
+    font-weight: 700;
+
+    color: var(--primary);
+
+    font-size: 14px;
+
+    margin-right: 4px;
+}
+
+.row-mes.aberto .toggle-icon {
+
+    color: var(--danger);
+}
+
+.row-detalhe {
+
+    background: rgba(74,138,248,0.04);
+}
+
+.detalhe-cell {
+
+    padding-left: 36px !important;
+
+    font-size: 12px;
+
+    color: var(--text-dim);
+
+    border-bottom: 1px solid var(--border-soft);
+}
+
+.dou-link {
+
+    color: var(--primary);
+
+    text-decoration: none;
+
+    transition: color .15s;
+}
+
+.dou-link:hover {
+
+    color: #6ea8fe;
+
+    text-decoration: underline;
+}
+
+/* ==========================================================
+   ROW DE INSTRUMENTO (2º nível da árvore)
+========================================================== */
+
+.row-instr {
+
+    cursor: pointer;
+
+    background: rgba(74,138,248,0.04);
+}
+
+.row-instr:hover {
+
+    background: rgba(74,138,248,0.08);
+}
+
+.row-instr.aberto {
+
+    background: rgba(74,138,248,0.10);
+}
+.row-instr.aberto .toggle-icon {
+
+    color: var(--danger);
+
+}
+
+/* ==========================================================
+   CÉLULA DE RÓTULO (1ª coluna fixa do cabeçalho unificado)
+========================================================== */
+
+.detalhe-label-cell {
+
+    text-align: left;
+
+}
+
+.row-instr .detalhe-label-cell {
+
+    padding-left: 36px !important;
+
+    font-size: 12px;
+
+    color: var(--text-dim);
+
+}
+
+/* ==========================================================
+   ROW DE REGISTROS (nível 3 da árvore, mesmo tbody)
+========================================================= */
+
+.row-registro {
+
+    background: rgba(0,0,0,0.12);
+
+}
+
+.row-registro .detalhe-label-cell {
+
+    padding-left: 52px !important;
+
+}
+
+.row-registro td {
+
+    font-size: 12px;
+
+    color: var(--text-dim);
+
+}
+
+/* ==========================================================
+   TREE-TOTAL ROW (total dos registros do nó expandido)
+========================================================== */
+
+.tree-total-row .detalhe-label-cell {
+
+    padding-left: 36px !important;
+
+}
+
+/* ==========================================================
+   ROW DE TOTAIS DO CONSTRUTOR
+========================================================== */
+
+.row-total {
+
+    font-weight: 700;
+
+    background: rgba(255,255,255,0.05);
+}
+
+.row-total td {
+
+    border-top: 2px solid var(--border-strong, rgba(255,255,255,0.15));
+
+}
+
+/* ==========================================================
+   HOST DO CONSTRUTOR DENTRO DA ÁRVORE
+   (sub-tabela construtora embutida sob o instrumento/mês)
+========================================================== */
+
+.tree-construtor-row {
+
+    background: rgba(0,0,0,0.18);
+
+}
+
+.tree-construtor-cell {
+
+    padding: 0 !important;
+
+    border-bottom: none !important;
+
+}
+
+.tree-construtor-host {
+
+    padding: 10px 12px 14px 36px;
+
+    border-left: 3px solid var(--primary);
+
+    background: rgba(74,138,248,0.05);
+
+}
+
+.tree-construtor-host .construtor-section {
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-lg);
+
+    overflow: hidden;
+
+    background: var(--card-bg);
+
+}
+
+.tree-construtor-host .construtor-table-wrap {
+
+    max-height: 380px;
+
+}
+
+

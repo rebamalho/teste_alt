@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+        Painel de Alterações Orçamentárias
+        {% endblock %}
+    </title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/filtros.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tabela.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/alteracoes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jornal.css') }}">
+
+    <!-- SheetJS + html2canvas -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+
+<body>
+
+<header>
+
+    <div class="header-inner">
+
+        <div class="brand">
+
+            <div class="brand-mark">
+                AO
+            </div>
+
+            <div class="brand-text">
+                <h1>Monitoramento do Orçamento</h1>
+                <p>Painel de Alterações Orçamentárias</p>
+            </div>
+
+        </div>
+
+        <div class="header-meta">
+
+            <span>
+                Exercício 2026
+            </span>
+
+            {% block header_toggle %}
+            {% endblock %}
+
+            <button
+                id="btnTema"
+                class="btn-ghost"
+                onclick="alternarTema()">
+                🌙 Tema Escuro
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+<main class="container">
+
+    {% block content %}
+    {% endblock %}
+
+</main>
+
+<script src="{{ url_for('static', filename='js/tema.js') }}"></script>
+
+{% block scripts %}
+{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,500 @@
+/* ==========================================================
+   VARIÁVEIS
+========================================================== */
+
+:root {
+
+    --bg: #0b0f17;
+    --bg-elevated: #10151f;
+
+    --card-bg: #141a26;
+    --card-bg-hover: #182031;
+
+    --border: #232b3d;
+    --border-soft: #1b2333;
+
+    --text: #e6e9f0;
+    --text-dim: #9aa3b5;
+    --text-faint: #5f6b82;
+
+    --primary: #4a8af8;
+    --primary-dim: #2c5aa8;
+
+    --success: #4cbf7a;
+    --warning: #f5a623;
+    --danger: #ef5350;
+
+    --radius: 10px;
+    --radius-lg: 14px;
+
+    --shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+
+    --sans: 'Inter',
+            'Segoe UI',
+            -apple-system,
+            BlinkMacSystemFont,
+            sans-serif;
+
+    --mono: 'JetBrains Mono',
+            Consolas,
+            monospace;
+
+    --header-overlay: rgba(11, 15, 23, 0.90);
+}
+
+/* ==========================================================
+   TEMA CLARO
+========================================================== */
+
+[data-theme="light"] {
+
+    --bg: #eef2f6;
+    --bg-elevated: #ffffff;
+
+    --card-bg: #ffffff;
+    --card-bg-hover: #f8f9fb;
+
+    --border: #e3e9f0;
+    --border-soft: #dde5ee;
+
+    --text: #1b2733;
+    --text-dim: #54657a;
+    --text-faint: #8a99ab;
+
+    --primary: #1351B4;
+    --primary-dim: #c7d9f2;
+
+    --title: #0C326F;
+
+    --success: #168821;
+    --warning: #E8730F;
+    --danger: #E52207;
+
+    --header-overlay: rgba(255,255,255,0.92);
+
+    --shadow: 0 2px 14px rgba(0,0,0,0.08);
+}
+
+/* ==========================================================
+   RESET
+========================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ==========================================================
+   TRANSIÇÃO DE TEMA
+   Suaviza a troca claro/escuro nas superfícies principais.
+   Elementos com transition própria (definida depois) mantêm a sua.
+========================================================== */
+
+body,
+header,
+.brand-text,
+.card,
+.filter-panel,
+.chart-card,
+.data-table-wrap,
+.ms-btn,
+.ms-dropdown,
+.ms-option,
+.ms-selected,
+.pill,
+.gs-wrap,
+.gs-result,
+.gs-chip,
+.construtor-panel,
+.construtor-options,
+.btn-ghost,
+.btn-primary,
+.btn-limpar,
+.page-header-info h2,
+.page-header-info p,
+.data-table thead th,
+.row-mes,
+.detalhe-cell,
+.dou-link,
+input,
+select {
+    transition:
+        background-color .3s ease,
+        color .3s ease,
+        border-color .3s ease,
+        box-shadow .3s ease;
+}
+
+/* ==========================================================
+   BODY
+========================================================== */
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+
+    background: var(--bg);
+
+    color: var(--text);
+
+    font-family: var(--sans);
+
+    min-height: 100vh;
+
+    transition:
+        background 0.25s ease,
+        color 0.25s ease;
+}
+
+/* ==========================================================
+   LINKS
+========================================================== */
+
+a {
+
+    color: var(--primary);
+
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+header {
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 100;
+
+    background: var(--header-overlay);
+
+    backdrop-filter: blur(10px);
+
+    border-bottom: 1px solid var(--border);
+
+    padding: 14px 28px;
+}
+
+.header-inner {
+
+    max-width: 1400px;
+
+    margin: 0 auto;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+/* ==========================================================
+   LOGO
+========================================================== */
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.brand-mark {
+
+    width: 36px;
+    height: 36px;
+
+    border-radius: 10px;
+
+    background: var(--primary);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: white;
+
+    font-weight: bold;
+
+    font-size: 15px;
+}
+
+.brand-text h1 {
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    letter-spacing: -0.3px;
+
+    color: var(--title, var(--text));
+}
+
+.brand-text p {
+
+    font-size: 12px;
+
+    color: var(--text-faint);
+}
+
+/* ==========================================================
+   ÁREA DIREITA HEADER
+========================================================== */
+
+.header-meta {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.header-meta span {
+
+    font-size: 12px;
+
+    color: var(--text-faint);
+}
+
+/* ==========================================================
+   BOTÕES
+========================================================== */
+
+.btn-ghost {
+
+    border: 1px solid var(--border);
+
+    background: var(--card-bg);
+
+    color: var(--text-dim);
+
+    border-radius: 20px;
+
+    padding: 7px 14px;
+
+    cursor: pointer;
+
+    font-size: 12px;
+
+    transition: all .15s ease;
+
+    font-family: inherit;
+}
+
+.btn-ghost:hover {
+
+    color: var(--text);
+
+    border-color: var(--primary);
+}
+
+.btn-primary {
+
+    border: none;
+
+    background: var(--primary);
+
+    color: white;
+
+    border-radius: 8px;
+
+    padding: 8px 16px;
+
+    font-size: 13px;
+
+    cursor: pointer;
+
+    transition: opacity .2s;
+}
+
+.btn-primary:hover {
+
+    opacity: .9;
+}
+
+/* ==========================================================
+   CONTAINER
+========================================================== */
+
+.container {
+
+    max-width: 1400px;
+
+    margin: 0 auto;
+
+    padding: 24px 28px 60px;
+}
+
+/* ==========================================================
+   TÍTULOS
+========================================================== */
+
+.page-title {
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    margin-bottom: 8px;
+}
+
+.page-subtitle {
+
+    font-size: 14px;
+
+    color: var(--text-dim);
+
+    margin-bottom: 24px;
+}
+
+/* ==========================================================
+   CARDS GENÉRICOS
+========================================================== */
+
+.panel {
+
+    background: var(--card-bg);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-lg);
+
+    box-shadow: var(--shadow);
+}
+
+/* ==========================================================
+   SEÇÕES
+========================================================== */
+
+.section {
+
+    margin-bottom: 24px;
+}
+
+.section-title {
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    margin-bottom: 12px;
+}
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+.loading {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 40px;
+}
+
+.loading::after {
+
+    content: "";
+
+    width: 28px;
+    height: 28px;
+
+    border-radius: 50%;
+
+    border: 3px solid var(--border);
+
+    border-top-color: var(--primary);
+
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ==========================================================
+   SCROLLBAR
+========================================================== */
+
+::-webkit-scrollbar {
+
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+
+    background: var(--border);
+
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+
+    background: transparent;
+}
+
+/* ==========================================================
+   RESPONSIVO
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .header-inner {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 12px;
+    }
+
+    .container {
+
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .page-title {
+
+        font-size: 20px;
+    }
+
+    .brand-text h1 {
+
+        font-size: 14px;
+    }
+
+    .header-meta {
+
+        flex-wrap: wrap;
+    }
+}
